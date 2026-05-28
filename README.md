@@ -1,6 +1,6 @@
-# Medicamentos API
+# Controle de Medicamentos API
 
-API REST para gerenciamento de medicamentos, desenvolvida com Node.js, Express e PostgreSQL.
+API REST para controle de ingestão de medicamentos — registre se o remédio foi tomado, o horário, dosagem e observações.
 
 **Autores:** Gabriel da Silveira Pessoni · Lívia Portela Ferreira  
 **Curso:** Análise e Desenvolvimento de Sistemas — FATEC · 5º Semestre
@@ -75,11 +75,7 @@ pool.query(sql).then(() => { console.log('Migration OK'); process.exit(0); }).ca
 ## Rodando o servidor
 
 ```bash
-# produção
 npm start
-
-# desenvolvimento
-npm run dev
 ```
 
 O servidor inicia em `http://localhost:3000`.
@@ -100,42 +96,42 @@ Os testes usam Jest + Supertest com o banco mockado — não precisam de conexã
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/` | Documentação HTML |
+| `GET` | `/` | Documentação HTML com testador integrado |
 | `GET` | `/api-docs` | Swagger UI |
-| `GET` | `/medicamentos` | Lista todos os medicamentos |
-| `GET` | `/medicamentos/:id` | Busca medicamento por ID |
-| `POST` | `/medicamentos` | Cria um medicamento |
-| `PUT` | `/medicamentos/:id` | Atualiza um medicamento |
-| `DELETE` | `/medicamentos/:id` | Remove um medicamento |
+| `GET` | `/medicamentos` | Lista todos os registros |
+| `GET` | `/medicamentos/:id` | Busca registro por ID |
+| `POST` | `/medicamentos` | Cria um registro |
+| `PUT` | `/medicamentos/:id` | Atualiza um registro |
+| `DELETE` | `/medicamentos/:id` | Remove um registro |
 
-### Campos do medicamento
+### Campos do registro
 
 | Campo | Tipo | Obrigatório | Descrição |
 |-------|------|:-----------:|-----------|
 | `nome` | string (2–100) | Sim | Nome do medicamento |
-| `descricao` | string (max 500) | Não | Descrição detalhada |
-| `preco` | number (≥ 0) | Sim | Preço em reais |
-| `quantidade_estoque` | integer (≥ 0) | Não | Unidades em estoque (padrão: 0) |
-| `fabricante` | string (max 100) | Não | Nome do fabricante |
+| `dosagem` | string (max 100) | Sim | Dosagem ex: "1 comprimido", "500mg" |
+| `horario` | string (max 50) | Sim | Horário previsto ex: "08:00", "após almoço" |
+| `tomado` | boolean | Não | Se o remédio foi tomado (padrão: `false`) |
+| `observacoes` | string (max 1000) | Não | Anotações livres |
 
 ### Exemplos
 
-**POST /medicamentos**
+**POST /medicamentos** — registrar um medicamento
 ```json
 {
   "nome": "Dipirona 500mg",
-  "descricao": "Analgésico e antipirético",
-  "preco": 12.50,
-  "quantidade_estoque": 100,
-  "fabricante": "Medley"
+  "dosagem": "1 comprimido",
+  "horario": "08:00",
+  "tomado": false,
+  "observacoes": "Tomar após o café"
 }
 ```
 
-**PUT /medicamentos/1**
+**PUT /medicamentos/1** — marcar como tomado
 ```json
 {
-  "preco": 15.00,
-  "quantidade_estoque": 80
+  "tomado": true,
+  "observacoes": "Tomado às 08:15"
 }
 ```
 

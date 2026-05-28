@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Medicamentos API</title>
+  <title>Controle de Medicamentos API</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a202c; }
@@ -62,8 +62,8 @@ app.get('/', (req, res) => {
 </head>
 <body>
   <header>
-    <h1>Medicamentos API</h1>
-    <p>API REST para gerenciamento de medicamentos — v1.0.0</p>
+    <h1>Controle de Medicamentos</h1>
+    <p>API REST para controle de ingestão de medicamentos — v1.0.0</p>
   </header>
   <main>
 
@@ -88,8 +88,8 @@ app.get('/', (req, res) => {
       <div class="presets">
         <button class="preset-btn" onclick="preset('GET','/medicamentos','')">GET todos</button>
         <button class="preset-btn" onclick="preset('GET','/medicamentos/1','')">GET por ID</button>
-        <button class="preset-btn" onclick='preset("POST","/medicamentos",JSON.stringify({nome:"Dipirona 500mg",descricao:"Analgésico",preco:12.50,quantidade_estoque:100,fabricante:"Medley"},null,2))'>POST criar</button>
-        <button class="preset-btn" onclick='preset("PUT","/medicamentos/1",JSON.stringify({preco:15.00,quantidade_estoque:80},null,2))'>PUT atualizar</button>
+        <button class="preset-btn" onclick='preset("POST","/medicamentos",JSON.stringify({nome:"Dipirona 500mg",dosagem:"1 comprimido",horario:"08:00",tomado:false,observacoes:"Tomar após o café"},null,2))'>POST registrar</button>
+        <button class="preset-btn" onclick='preset("PUT","/medicamentos/1",JSON.stringify({tomado:true,observacoes:"Tomado às 08:15"},null,2))'>PUT marcar tomado</button>
         <button class="preset-btn" onclick="preset('DELETE','/medicamentos/1','')">DELETE</button>
       </div>
 
@@ -116,15 +116,15 @@ app.get('/', (req, res) => {
     </div>
 
     <div class="card">
-      <h2>Campos do medicamento</h2>
+      <h2>Campos do registro</h2>
       <table>
         <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
         <tbody>
           <tr><td>nome</td><td>string</td><td>Sim</td><td>Nome do medicamento (2–100 chars)</td></tr>
-          <tr><td>descricao</td><td>string</td><td>Não</td><td>Descrição detalhada (até 500 chars)</td></tr>
-          <tr><td>preco</td><td>number</td><td>Sim</td><td>Preço em reais (≥ 0)</td></tr>
-          <tr><td>quantidade_estoque</td><td>integer</td><td>Não</td><td>Unidades em estoque (padrão: 0)</td></tr>
-          <tr><td>fabricante</td><td>string</td><td>Não</td><td>Nome do fabricante (até 100 chars)</td></tr>
+          <tr><td>dosagem</td><td>string</td><td>Sim</td><td>Dosagem ex: "1 comprimido", "500mg"</td></tr>
+          <tr><td>horario</td><td>string</td><td>Sim</td><td>Horário previsto ex: "08:00", "após almoço"</td></tr>
+          <tr><td>tomado</td><td>boolean</td><td>Não</td><td>Se o remédio foi tomado (padrão: false)</td></tr>
+          <tr><td>observacoes</td><td>string</td><td>Não</td><td>Anotações livres (até 1000 chars)</td></tr>
         </tbody>
       </table>
     </div>

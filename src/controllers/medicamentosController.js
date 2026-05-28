@@ -1,7 +1,7 @@
 const pool = require('../config/database');
 const { criarSchema, atualizarSchema } = require('../validations/medicamentosValidation');
 
-const CAMPOS_SELECT = 'id, nome, descricao, preco, quantidade_estoque, fabricante, created_at';
+const CAMPOS_SELECT = 'id, nome, dosagem, horario, tomado, observacoes, created_at';
 
 async function listar(req, res) {
   try {
@@ -38,14 +38,14 @@ async function criar(req, res) {
     return res.status(400).json({ erro: error.details.map((d) => d.message) });
   }
   try {
-    const { nome, descricao, preco, quantidade_estoque, fabricante } = value;
+    const { nome, dosagem, horario, tomado, observacoes } = value;
     const resultado = await pool.query(
-      `INSERT INTO medicamentos (nome, descricao, preco, quantidade_estoque, fabricante)
+      `INSERT INTO medicamentos (nome, dosagem, horario, tomado, observacoes)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING ${CAMPOS_SELECT}`,
-      [nome, descricao || null, preco, quantidade_estoque ?? 0, fabricante || null]
+      [nome, dosagem, horario, tomado ?? false, observacoes || null]
     );
-    res.status(201).json({ mensagem: 'Medicamento criado com sucesso', medicamento: resultado.rows[0] });
+    res.status(201).json({ mensagem: 'Medicamento registrado com sucesso', medicamento: resultado.rows[0] });
   } catch (erro) {
     console.error('Erro ao criar medicamento:', erro);
     res.status(500).json({ erro: 'Erro interno do servidor' });
@@ -64,9 +64,7 @@ async function atualizar(req, res) {
     const sets = campos.map((campo, i) => `${campo} = $${i + 1}`).join(', ');
 
     const resultado = await pool.query(
-      `UPDATE medicamentos
-       SET ${sets}, updated_at = NOW()
-       WHERE id = $${campos.length + 1}
+      `UPDATE medicamentos SET ${sets} WHERE id = $${campos.length + 1}
        RETURNING ${CAMPOS_SELECT}`,
       [...valores, id]
     );
@@ -90,7 +88,7 @@ async function deletar(req, res) {
     if (resultado.rows.length === 0) {
       return res.status(404).json({ erro: 'Medicamento não encontrado' });
     }
-    res.json({ mensagem: 'Medicamento deletado com sucesso' });
+    res.json({ mensagem: 'Medicamento removido com sucesso' });
   } catch (erro) {
     console.error('Erro ao deletar medicamento:', erro);
     res.status(500).json({ erro: 'Erro interno do servidor' });

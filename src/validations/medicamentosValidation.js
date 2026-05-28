@@ -6,19 +6,21 @@ const criarSchema = Joi.object({
     'string.max': 'nome deve ter no máximo 100 caracteres',
     'any.required': 'nome é obrigatório',
   }),
-  descricao: Joi.string().max(500).optional().allow('').messages({
-    'string.max': 'descricao deve ter no máximo 500 caracteres',
+  dosagem: Joi.string().min(1).max(100).required().messages({
+    'string.min': 'dosagem não pode ser vazia',
+    'string.max': 'dosagem deve ter no máximo 100 caracteres',
+    'any.required': 'dosagem é obrigatória',
   }),
-  preco: Joi.number().min(0).required().messages({
-    'number.min': 'preco deve ser maior ou igual a zero',
-    'any.required': 'preco é obrigatório',
+  horario: Joi.string().min(1).max(50).required().messages({
+    'string.min': 'horario não pode ser vazio',
+    'string.max': 'horario deve ter no máximo 50 caracteres',
+    'any.required': 'horario é obrigatório',
   }),
-  quantidade_estoque: Joi.number().integer().min(0).default(0).messages({
-    'number.integer': 'quantidade_estoque deve ser um número inteiro',
-    'number.min': 'quantidade_estoque deve ser maior ou igual a zero',
+  tomado: Joi.boolean().default(false).messages({
+    'boolean.base': 'tomado deve ser true ou false',
   }),
-  fabricante: Joi.string().max(100).optional().allow('').messages({
-    'string.max': 'fabricante deve ter no máximo 100 caracteres',
+  observacoes: Joi.string().max(1000).optional().allow('').messages({
+    'string.max': 'observacoes deve ter no máximo 1000 caracteres',
   }),
 });
 
@@ -27,18 +29,17 @@ const atualizarSchema = Joi.object({
     'string.min': 'nome deve ter pelo menos 2 caracteres',
     'string.max': 'nome deve ter no máximo 100 caracteres',
   }),
-  descricao: Joi.string().max(500).optional().allow('').messages({
-    'string.max': 'descricao deve ter no máximo 500 caracteres',
+  dosagem: Joi.string().min(1).max(100).messages({
+    'string.max': 'dosagem deve ter no máximo 100 caracteres',
   }),
-  preco: Joi.number().min(0).messages({
-    'number.min': 'preco deve ser maior ou igual a zero',
+  horario: Joi.string().min(1).max(50).messages({
+    'string.max': 'horario deve ter no máximo 50 caracteres',
   }),
-  quantidade_estoque: Joi.number().integer().min(0).messages({
-    'number.integer': 'quantidade_estoque deve ser um número inteiro',
-    'number.min': 'quantidade_estoque deve ser maior ou igual a zero',
+  tomado: Joi.boolean().messages({
+    'boolean.base': 'tomado deve ser true ou false',
   }),
-  fabricante: Joi.string().max(100).optional().allow('').messages({
-    'string.max': 'fabricante deve ter no máximo 100 caracteres',
+  observacoes: Joi.string().max(1000).optional().allow('').messages({
+    'string.max': 'observacoes deve ter no máximo 1000 caracteres',
   }),
 }).min(1).messages({
   'object.min': 'Informe pelo menos um campo para atualizar',

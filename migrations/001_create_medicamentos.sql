@@ -1,10 +1,11 @@
-CREATE TABLE IF NOT EXISTS medicamentos (
-  id              SERIAL PRIMARY KEY,
-  nome            VARCHAR(100)    NOT NULL,
-  descricao       TEXT,
-  preco           NUMERIC(10, 2)  NOT NULL,
-  quantidade_estoque INTEGER      NOT NULL DEFAULT 0,
-  fabricante      VARCHAR(100),
-  created_at      TIMESTAMP       NOT NULL DEFAULT NOW(),
-  updated_at      TIMESTAMP       NOT NULL DEFAULT NOW()
+DROP TABLE IF EXISTS medicamentos;
+
+CREATE TABLE medicamentos (
+  id          SERIAL PRIMARY KEY,
+  nome        VARCHAR(100) NOT NULL,
+  dosagem     VARCHAR(100) NOT NULL,
+  horario     VARCHAR(50)  NOT NULL,
+  tomado      BOOLEAN      NOT NULL DEFAULT FALSE,
+  observacoes TEXT,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

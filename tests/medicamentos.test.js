@@ -7,17 +7,17 @@ const pool = require('../src/config/database');
 const medicamentoMock = {
   id: 1,
   nome: 'Dipirona 500mg',
-  descricao: 'Analgésico',
-  preco: '12.50',
-  quantidade_estoque: 50,
-  fabricante: 'Medley',
+  dosagem: '1 comprimido',
+  horario: '08:00',
+  tomado: false,
+  observacoes: 'Tomar após o café',
   created_at: new Date().toISOString(),
 };
 
 beforeEach(() => jest.clearAllMocks());
 
 describe('GET /medicamentos', () => {
-  it('retorna lista de medicamentos com status 200', async () => {
+  it('retorna lista de registros com status 200', async () => {
     pool.query.mockResolvedValueOnce({ rows: [medicamentoMock] });
 
     const res = await request(app).get('/medicamentos');
@@ -38,16 +38,17 @@ describe('GET /medicamentos', () => {
 });
 
 describe('GET /medicamentos/:id', () => {
-  it('retorna um medicamento com status 200', async () => {
+  it('retorna um registro com status 200', async () => {
     pool.query.mockResolvedValueOnce({ rows: [medicamentoMock] });
 
     const res = await request(app).get('/medicamentos/1');
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(1);
+    expect(res.body).toHaveProperty('tomado');
   });
 
-  it('retorna 404 quando medicamento não existe', async () => {
+  it('retorna 404 quando registro não existe', async () => {
     pool.query.mockResolvedValueOnce({ rows: [] });
 
     const res = await request(app).get('/medicamentos/999');
@@ -58,14 +59,13 @@ describe('GET /medicamentos/:id', () => {
 });
 
 describe('POST /medicamentos', () => {
-  it('cria um medicamento e retorna 201', async () => {
+  it('registra um medicamento e retorna 201', async () => {
     pool.query.mockResolvedValueOnce({ rows: [medicamentoMock] });
 
     const res = await request(app).post('/medicamentos').send({
       nome: 'Dipirona 500mg',
-      preco: 12.5,
-      quantidade_estoque: 50,
-      fabricante: 'Medley',
+      dosagem: '1 comprimido',
+      horario: '08:00',
     });
 
     expect(res.status).toBe(201);
@@ -74,28 +74,41 @@ describe('POST /medicamentos', () => {
   });
 
   it('retorna 400 quando nome está ausente', async () => {
-    const res = await request(app).post('/medicamentos').send({ preco: 10 });
+    const res = await request(app).post('/medicamentos').send({
+      dosagem: '1 comprimido',
+      horario: '08:00',
+    });
 
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('erro');
   });
 
-  it('retorna 400 quando preco está ausente', async () => {
-    const res = await request(app).post('/medicamentos').send({ nome: 'Paracetamol' });
+  it('retorna 400 quando dosagem está ausente', async () => {
+    const res = await request(app).post('/medicamentos').send({
+      nome: 'Dipirona',
+      horario: '08:00',
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('erro');
+  });
+
+  it('retorna 400 quando horario está ausente', async () => {
+    const res = await request(app).post('/medicamentos').send({
+      nome: 'Dipirona',
+      dosagem: '1 comprimido',
+    });
 
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('erro');
   });
 
   it('retorna 400 quando nome é muito curto', async () => {
-    const res = await request(app).post('/medicamentos').send({ nome: 'A', preco: 10 });
-
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('erro');
-  });
-
-  it('retorna 400 quando preco é negativo', async () => {
-    const res = await request(app).post('/medicamentos').send({ nome: 'Dipirona', preco: -5 });
+    const res = await request(app).post('/medicamentos').send({
+      nome: 'A',
+      dosagem: '1 comprimido',
+      horario: '08:00',
+    });
 
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('erro');
@@ -103,20 +116,20 @@ describe('POST /medicamentos', () => {
 });
 
 describe('PUT /medicamentos/:id', () => {
-  it('atualiza um medicamento e retorna 200', async () => {
-    pool.query.mockResolvedValueOnce({ rows: [{ ...medicamentoMock, preco: '20.00' }] });
+  it('marca medicamento como tomado e retorna 200', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ ...medicamentoMock, tomado: true }] });
 
-    const res = await request(app).put('/medicamentos/1').send({ preco: 20 });
+    const res = await request(app).put('/medicamentos/1').send({ tomado: true });
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('mensagem');
-    expect(res.body).toHaveProperty('medicamento');
+    expect(res.body.medicamento.tomado).toBe(true);
   });
 
-  it('retorna 404 quando medicamento não existe', async () => {
+  it('retorna 404 quando registro não existe', async () => {
     pool.query.mockResolvedValueOnce({ rows: [] });
 
-    const res = await request(app).put('/medicamentos/999').send({ preco: 20 });
+    const res = await request(app).put('/medicamentos/999').send({ tomado: true });
 
     expect(res.status).toBe(404);
     expect(res.body).toHaveProperty('erro');
@@ -131,7 +144,7 @@ describe('PUT /medicamentos/:id', () => {
 });
 
 describe('DELETE /medicamentos/:id', () => {
-  it('deleta um medicamento e retorna 200', async () => {
+  it('remove um registro e retorna 200', async () => {
     pool.query.mockResolvedValueOnce({ rows: [{ id: 1 }] });
 
     const res = await request(app).delete('/medicamentos/1');
@@ -140,7 +153,7 @@ describe('DELETE /medicamentos/:id', () => {
     expect(res.body).toHaveProperty('mensagem');
   });
 
-  it('retorna 404 quando medicamento não existe', async () => {
+  it('retorna 404 quando registro não existe', async () => {
     pool.query.mockResolvedValueOnce({ rows: [] });
 
     const res = await request(app).delete('/medicamentos/999');
