@@ -3,7 +3,7 @@
 API REST para controle de ingestão de medicamentos — registre se o remédio foi tomado, o horário, dosagem e observações.
 
 **Autores:** Gabriel da Silveira Pessoni · Lívia Portela Ferreira  
-**Curso:** Análise e Desenvolvimento de Sistemas — FATEC · 5º Semestre
+**Curso:** DSM — FATEC · 5º Semestre
 
 ---
 
@@ -34,8 +34,8 @@ API REST para controle de ingestão de medicamentos — registre se o remédio f
 **1. Clone o repositório e instale as dependências:**
 
 ```bash
-git clone <url-do-repo>
-cd bank_api
+git clone https://github.com/gpessoni/projeto-flutter-fatec-api
+cd projeto-flutter-fatec-api
 npm install
 ```
 
