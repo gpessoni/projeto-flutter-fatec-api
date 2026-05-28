@@ -34,8 +34,8 @@ API REST para gerenciamento de medicamentos, desenvolvida com Node.js, Express e
 **1. Clone o repositório e instale as dependências:**
 
 ```bash
-git clone <url-do-repo>
-cd bank_api
+git clone https://github.com/gpessoni/projeto-flutter-fatec-api
+cd projeto-flutter-fatec-api
 npm install
 ```
 
