@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
 
       <div class="body-wrap">
         <label>Body (JSON) — deixe vazio para GET/DELETE</label>
-        <textarea class="body-area" id="body" placeholder='{ "nome": "Dipirona", "preco": 12.5 }'></textarea>
+        <textarea class="body-area" id="body" placeholder='{ "nome": "Dipirona" }'></textarea>
       </div>
 
       <div>
