@@ -3,7 +3,7 @@
 API REST para gerenciamento de medicamentos, desenvolvida com Node.js, Express e PostgreSQL.
 
 **Autores:** Gabriel da Silveira Pessoni · Lívia Portela Ferreira  
-**Curso:** Análise e Desenvolvimento de Sistemas — FATEC · 5º Semestre
+**Curso:** DSM — FATEC · 5º Semestre
 
 ---
 
